@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
@@ -22,37 +21,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            TheCounterApp()
+            val viewModel: CounterViewModel= viewModel()
+            TheCounterApp(viewModel)
 
         }
     }
 
     @Composable
-     fun TheCounterApp() {
-        val count  = remember {
-            mutableIntStateOf(0)
-        }
-        fun increment(){
-            count.intValue++
-        }
-        fun decrement(){
-            count.intValue--
-        }
-
+     fun TheCounterApp(viewModel: CounterViewModel) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Count ${count.intValue}",
+                text = "Count ${viewModel.count.value}",
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp
@@ -60,14 +52,14 @@ class MainActivity : ComponentActivity() {
             Spacer(modifier = Modifier.height(20.dp))
             Row {
                 Button(onClick = {
-                    increment()
+                    viewModel.increment()
                 }) {
                     Text(text = "Increase")
                 }
                 Spacer(modifier = Modifier.width(20.dp))
                 Button(onClick = {
-                    if(count.intValue>0){
-                        decrement()
+                    if(viewModel.count.value > 0){
+                        viewModel.decrement()
                     }
                 }) {
                     Text(text = "Decrease")
